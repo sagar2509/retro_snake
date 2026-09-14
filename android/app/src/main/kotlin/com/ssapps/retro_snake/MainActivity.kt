@@ -1,4 +1,4 @@
-package com.example.retro_snake
+package com.ssapps.retro_snake
 
 import io.flutter.embedding.android.FlutterActivity
 
