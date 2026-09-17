@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../game/snake_game.dart';
 import '../widgets/game_board.dart';
@@ -15,6 +16,8 @@ class _GameScreenState extends State<GameScreen> {
   late final SnakeGame _game;
   Timer? _timer;
   Offset _dragTotal = Offset.zero;
+  int _lastScore = 0;
+  GameStatus _lastStatus = GameStatus.ready;
 
   @override
   void initState() {
@@ -45,6 +48,15 @@ class _GameScreenState extends State<GameScreen> {
 
   void _onGameChanged() {
     if (!mounted) return;
+    if (_game.score > _lastScore) {
+      HapticFeedback.mediumImpact();
+    }
+    if (_game.status == GameStatus.gameOver && _lastStatus != GameStatus.gameOver) {
+      HapticFeedback.heavyImpact();
+    }
+    _lastScore = _game.score;
+    _lastStatus = _game.status;
+
     if (_game.status == GameStatus.playing) {
       _scheduleNextTick();
     } else {
